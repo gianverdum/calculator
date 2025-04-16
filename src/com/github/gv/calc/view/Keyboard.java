@@ -2,8 +2,10 @@ package com.github.gv.calc.view;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class Keyboard extends JPanel {
+public class Keyboard extends JPanel implements ActionListener {
 
     private final Color COLOR_DARK_GRAY = new Color(68,68,68);
     private final Color COLOR_LIGHT_GRAY = new Color(99,99,99);
@@ -58,6 +60,16 @@ public class Keyboard extends JPanel {
         constraints.gridx = x;
         constraints.gridy = y;
         Button button = new Button(text, color);
+        button.addActionListener(this);
         add(button, constraints);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if(actionEvent.getSource() instanceof JButton) {
+        JButton button = (JButton) actionEvent.getSource();
+        String value = button.getText().replaceAll("[\\u2007\\s]", "");
+        System.out.println(value);
+        }
     }
 }
