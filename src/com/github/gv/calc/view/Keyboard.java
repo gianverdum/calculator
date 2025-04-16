@@ -16,35 +16,40 @@ public class Keyboard extends JPanel {
 
         setLayout(layout);
 
+        constraints.weightx = 1;
+        constraints.weighty = 1;
+        constraints.fill = GridBagConstraints.BOTH;
+
         // Row 1
         addButton("AC", COLOR_DARK_GRAY, constraints, 0, 0);
-        addButton("+/-", COLOR_DARK_GRAY, constraints, 1, 0);
-        addButton("%", COLOR_DARK_GRAY, constraints, 2, 0);
-        addButton("/", COLOR_ORANGE, constraints, 3, 0);
+        addButton("\u2007\u00B1\u2007", COLOR_DARK_GRAY, constraints, 1, 0);
+        addButton("\u2007%\u2007", COLOR_DARK_GRAY, constraints, 2, 0);
+        addButton("\u2007/\u2007", COLOR_ORANGE, constraints, 3, 0);
 
         // Row 2
-        addButton("7", COLOR_LIGHT_GRAY, constraints, 0, 1);
-        addButton("8", COLOR_LIGHT_GRAY, constraints, 1, 1);
-        addButton("9", COLOR_LIGHT_GRAY, constraints, 2, 1);
-        addButton("*", COLOR_ORANGE, constraints, 3, 1);
+        addButton("\u20077\u2007", COLOR_LIGHT_GRAY, constraints, 0, 1);
+        addButton("\u20078\u2007", COLOR_LIGHT_GRAY, constraints, 1, 1);
+        addButton("\u20079\u2007", COLOR_LIGHT_GRAY, constraints, 2, 1);
+        addButton("\u2007*\u2007", COLOR_ORANGE, constraints, 3, 1);
 
         // Row 3
-        addButton("4", COLOR_LIGHT_GRAY, constraints, 0, 2);
-        addButton("5", COLOR_LIGHT_GRAY, constraints, 1, 2);
-        addButton("6", COLOR_LIGHT_GRAY, constraints, 2, 2);
-        addButton("-", COLOR_ORANGE, constraints, 3, 2);
+        addButton("\u20074\u2007", COLOR_LIGHT_GRAY, constraints, 0, 2);
+        addButton("\u20075\u2007", COLOR_LIGHT_GRAY, constraints, 1, 2);
+        addButton("\u20076\u2007", COLOR_LIGHT_GRAY, constraints, 2, 2);
+        addButton("\u2007-\u2007", COLOR_ORANGE, constraints, 3, 2);
 
         // Row 4
-        addButton("1", COLOR_LIGHT_GRAY, constraints, 0, 3);
-        addButton("2", COLOR_LIGHT_GRAY, constraints, 1, 3);
-        addButton("3", COLOR_LIGHT_GRAY, constraints, 2, 3);
-        addButton("+", COLOR_ORANGE, constraints, 3, 3);
+        addButton("\u20071\u2007", COLOR_LIGHT_GRAY, constraints, 0, 3);
+        addButton("\u20072\u2007", COLOR_LIGHT_GRAY, constraints, 1, 3);
+        addButton("\u20073\u2007", COLOR_LIGHT_GRAY, constraints, 2, 3);
+        addButton("\u2007+\u2007", COLOR_ORANGE, constraints, 3, 3);
 
         // Row 5
+        constraints.gridwidth = 2;
         addButton("0", COLOR_LIGHT_GRAY, constraints, 0, 4);
-        addButton("0", COLOR_LIGHT_GRAY, constraints, 1, 4);
-        addButton(",", COLOR_LIGHT_GRAY, constraints, 2, 4);
-        addButton("=", COLOR_ORANGE, constraints, 3, 4);
+        constraints.gridwidth = 1;
+        addButton("\u2007,\u2007", COLOR_LIGHT_GRAY, constraints, 2, 4);
+        addButton("\u2007=\u2007", COLOR_ORANGE, constraints, 3, 4);
 
     }
 
