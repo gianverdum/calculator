@@ -1,5 +1,7 @@
 package com.github.gv.calc.view;
 
+import com.github.gv.calc.model.Memory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -67,9 +69,17 @@ public class Keyboard extends JPanel implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if(actionEvent.getSource() instanceof JButton) {
-        JButton button = (JButton) actionEvent.getSource();
-        String value = button.getText().replaceAll("[\\u2007\\s]", "");
-        System.out.println(value);
+            JButton button = (JButton) actionEvent.getSource();
+            String value = button.getText().replaceAll("[\\u2007\\s]", "");
+
+            if (value.equals("AC")) {
+                Memory.getInstance().setCurrentText("");
+            } else {
+                String current = Memory.getInstance().getCurrentText();
+                boolean isInitialZero = current.equals("0");
+                String updated = isInitialZero ? value : current + value;
+                Memory.getInstance().setCurrentText(updated);
+            }
         }
     }
 }
