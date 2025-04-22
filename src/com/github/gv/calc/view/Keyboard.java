@@ -72,14 +72,15 @@ public class Keyboard extends JPanel implements ActionListener {
             JButton button = (JButton) actionEvent.getSource();
             String value = button.getText().replaceAll("[\\u2007\\s]", "");
 
-            if (value.equals("AC")) {
-                Memory.getInstance().setCurrentText("");
-            } else {
-                String current = Memory.getInstance().getCurrentText();
-                boolean isInitialZero = current.equals("0");
-                String updated = isInitialZero ? value : current + value;
-                Memory.getInstance().setCurrentText(updated);
-            }
+//            if (value.equals("AC")) {
+//                Memory.getInstance().processCommand("");
+//            } else {
+//                String current = Memory.getInstance().getCurrentText();
+//                boolean isInitialZero = current.equals("0");
+//                String updated = isInitialZero ? value : current + value;
+//                Memory.getInstance().processCommand(updated);
+//            }
+            Memory.getInstance().processCommand(value);
         }
     }
 }
