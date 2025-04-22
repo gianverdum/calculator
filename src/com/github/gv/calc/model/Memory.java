@@ -6,14 +6,17 @@ import java.util.List;
 public class Memory {
 
     private enum CommandType {
-            CLEAR, NUMBER, DIV, MUL, PLUS, MINUS, TIMES, COMMA, EQUALS;
+            CLEAR, NUMBER, DIV, PLUS, MINUS, TIMES, COMMA, EQUALS;
     };
 
     private static final Memory instance = new Memory();
 
     private final List<MemoryObserver> observers = new ArrayList<MemoryObserver>();
 
+    private CommandType lastOperation = null;
+    private boolean replace = false;
     private String currentText = "";
+    private String bufferText = "";
 
     private Memory() {
 
@@ -34,24 +37,47 @@ public class Memory {
     public void processCommand(String input) {
 
         CommandType commandType = detectCommandType(input);
-        System.out.println("CommandType: " + commandType);
-        switch (commandType) {
-            case CLEAR:
-                currentText = "";
-                break;
-            case NUMBER:
-            case COMMA:
-            case DIV:
-            case MUL:
-            case PLUS:
-            case MINUS:
-            case EQUALS:
-                currentText += input;
-                break;
-            case null, default:
-                break;
+        if (commandType == null) {
+            return;
+        } else if (commandType == CommandType.CLEAR) {
+            currentText = "";
+            bufferText = "";
+            replace = false;
+            lastOperation = null;
+        } else if (commandType == CommandType.NUMBER || commandType == CommandType.COMMA) {
+            currentText = replace ? input : currentText + input;
+            replace = false;
+        } else {
+            replace = true;
+            currentText = getOperationResult();
+            bufferText = currentText;
+            lastOperation = commandType;
         }
+
         observers.forEach(observer -> observer.updatedValue(getCurrentText()));
+    }
+
+    private String getOperationResult() {
+        if (lastOperation == null) {
+            return currentText;
+        }
+        double numberBuffer = Double.parseDouble(bufferText.replaceAll(",", "."));
+        double currentNumber = Double.parseDouble(currentText.replaceAll(",", "."));
+
+        double result = 0;
+
+        if (lastOperation == CommandType.PLUS) {
+            result = numberBuffer + currentNumber;
+        } else if (lastOperation == CommandType.MINUS) {
+            result = numberBuffer - currentNumber;
+        } else if (lastOperation == CommandType.TIMES) {
+            result = numberBuffer * currentNumber;
+        } else if (lastOperation == CommandType.DIV) {
+            result = numberBuffer / currentNumber;
+        }
+        String resultString = Double.toString(result).replaceAll("\\.", ",");
+        boolean isInteger = resultString.endsWith(",0");
+        return isInteger ? resultString.replace(",0", "") : resultString;
     }
 
     private CommandType detectCommandType(String text) {
@@ -69,14 +95,14 @@ public class Memory {
             } else if ("/".equals(text)) {
                 return CommandType.DIV;
             } else if ("*".equals(text)) {
-                return CommandType.MUL;
+                return CommandType.TIMES;
             } else if ("+".equals(text)) {
                 return CommandType.PLUS;
             } else if ("-".equals(text)) {
                 return CommandType.MINUS;
             } else if ("=".equals(text)) {
                 return CommandType.EQUALS;
-            } else if (",".equals(text)) {
+            } else if (",".equals(text) && !currentText.contains(",")) {
                 return CommandType.COMMA;
             }
         }
