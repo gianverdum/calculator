@@ -6,7 +6,7 @@ import java.util.List;
 public class Memory {
 
     private enum CommandType {
-            CLEAR, NUMBER, DIV, PLUS, MINUS, TIMES, COMMA, EQUALS;
+            CLEAR, SIGNAL, PERCENT, NUMBER, DIV, PLUS, MINUS, TIMES, COMMA, EQUALS;
     };
 
     private static final Memory instance = new Memory();
@@ -44,9 +44,15 @@ public class Memory {
             bufferText = "";
             replace = false;
             lastOperation = null;
+        } else if (commandType == CommandType.SIGNAL && currentText.contains("-")) {
+            currentText = currentText.substring(1);
+        } else if (commandType == CommandType.SIGNAL && !currentText.contains("-")) {
+            currentText = "-" + currentText;
         } else if (commandType == CommandType.NUMBER || commandType == CommandType.COMMA) {
             currentText = replace ? input : currentText + input;
             replace = false;
+        } else if (commandType == CommandType.PERCENT) {
+            applyPercent();
         } else {
             replace = true;
             currentText = getOperationResult();
@@ -57,8 +63,24 @@ public class Memory {
         observers.forEach(observer -> observer.updatedValue(getCurrentText()));
     }
 
+    private void applyPercent() {
+        try {
+            double base = Double.parseDouble(bufferText.replace(",", "."));
+            double current = Double.parseDouble(currentText.replace(",", "."));
+            double percentValue = (base * current) / 100.0;
+
+            String result = Double.toString(percentValue).replace(".", ",");
+            boolean isInteger = result.endsWith(",0");
+            currentText = isInteger ? result.replace(",0", "") : result;
+
+            replace = true;
+        } catch (NumberFormatException e) {
+            currentText = "0";
+        }
+    }
+
     private String getOperationResult() {
-        if (lastOperation == null) {
+        if (lastOperation == null || lastOperation == CommandType.EQUALS) {
             return currentText;
         }
         double numberBuffer = Double.parseDouble(bufferText.replaceAll(",", "."));
@@ -92,6 +114,8 @@ public class Memory {
         } catch (NumberFormatException e) {
             if("AC".equals(text)) {
                 return CommandType.CLEAR;
+            } else if ("%".equals(text)) {
+                return CommandType.PERCENT;
             } else if ("/".equals(text)) {
                 return CommandType.DIV;
             } else if ("*".equals(text)) {
@@ -102,6 +126,8 @@ public class Memory {
                 return CommandType.MINUS;
             } else if ("=".equals(text)) {
                 return CommandType.EQUALS;
+            } else if ("±".equals(text)) {
+                return CommandType.SIGNAL;
             } else if (",".equals(text) && !currentText.contains(",")) {
                 return CommandType.COMMA;
             }
